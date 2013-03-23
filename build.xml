@@ -1,0 +1,135 @@
+<?xml version="1.0"?>
+
+<!-- $Id: build.xml,v 1.15 2004/09/04 12:15:48 taganaka Exp $  -->
+<project name="rsslib4j" default="init" basedir=".">
+  <description>
+    rsslib4j build file
+  </description>
+  <property name="src"       location="src" value="src"/>
+  <property name="build"     location="build"/>
+  <property name="lib"       location="lib" value="lib"/>
+  <property name="bin"       location="bin"/>
+  <property name="javadoc"   location="javadoc" value="javadoc"/>
+  <property name="libsrc"    location="${lib}/src"/>
+  <property name="version"   value="0.2"/>
+  <property name="prgname"   value="rsslib4j"/>
+  <property name="jarfile"   value="${prgname}-${version}.jar"/>
+  <property name="dist-bin"  location="${prgname}-bin-${version}" value="${prgname}-bin-${version}"/>
+  <property name="dist-src"  location="${prgname}-src-${version}" value="${prgname}-src-${version}"/>
+  <property name="mainclass" value="org.gnu.stealthp.rsslib.Test"/>
+
+  <!-- Create init structure -->
+  <target name="init" description="Creates the Environment">
+    <tstamp/>
+    <mkdir dir="${build}"/>
+	<mkdir dir="${bin}"/>
+  </target>
+
+
+  <!-- Make application -->
+  <target name="make" depends="init" description="Compiles the Source into ./build">
+    <javac destdir="${build}" deprecation="yes" debug="true" source="1.4">
+	<classpath>
+      <fileset dir="${lib}">
+        <include name="**/*.jar"/>
+      </fileset>
+      </classpath>
+      <src path="${src}"/>
+    </javac>
+  </target>
+
+
+ <target name="jar" depends="make">
+    <jar jarfile="${bin}/${jarfile}" update="true" index="true" basedir="${build}">
+      <manifest>
+        <attribute name="Main-Class" value="${mainclass}"/>
+      </manifest>
+    </jar>
+ </target>
+
+  <target name="dist-bin" depends="make,jar,javadoc" description="Create a distribution">
+    <delete dir="${dist-bin}"/>
+    <mkdir dir="${dist-bin}"/>
+    <copy todir="${dist-bin}/${lib}">
+      <fileset dir="${lib}"/>
+    </copy>
+      <copy todir="${dist-bin}/${javadoc}">
+     <fileset dir="${javadoc}"/>
+    </copy>
+     <copy todir="${dist-bin}">
+     <fileset dir="./" includes="*.txt"/>
+     <fileset dir="./" includes="*.xml"/>
+     <fileset dir="./" includes="classpath"/>
+     <fileset dir="./" includes="runtest"/>
+    </copy>
+	<copy file="${bin}/${jarfile}" todir="${dist-bin}"/>
+    <exec executable="chmod" os="Linux">
+  	 <arg line="+x ${dist-bin}/classpath ${dist-bin}/runtest"/>
+	</exec>
+	<tar tarfile="${dist-bin}.tgz" compression="gzip">
+	 <tarfileset dir="${dist-bin}"  prefix="${dist-bin}"/>
+	</tar>
+	<delete dir="${dist-bin}"/>
+   </target>
+
+  <target name="dist-all" depends="dist-bin,dist-src" description="Create a distribution"/>
+
+  <target name="dist-src" depends="make,jar,javadoc" description="Create a distribution">
+    <delete dir="${dist-src}"/>
+    <mkdir dir="${dist-src}"/> 
+    <copy todir="${dist-src}/${lib}">
+     <fileset dir="${lib}"/>
+    </copy>
+    <copy todir="${dist-src}/${src}">
+      <fileset dir="${src}"/>
+    </copy>
+    <copy todir="${dist-src}">
+      <fileset dir="./" includes="*.txt"/>
+      <fileset dir="./" includes="*.xml"/>
+      <fileset dir="./" includes="classpath"/>
+      <fileset dir="./" includes="runtest"/>
+    </copy>
+    <copy todir="${dist-src}/${javadoc}">
+      <fileset dir="${javadoc}"/>
+    </copy>
+    <!--copy file="${bin}/${jarfile}" todir="${dist-src}"/-->
+   <exec executable="chmod" os="Linux">
+     <arg line="+x ${dist-src}/classpath ${dist-src}/runtest"/>
+    </exec>
+    <tar tarfile="${dist-src}.tgz" compression="gzip">
+     <tarfileset dir="${dist-src}"  prefix="${dist-src}"/>
+    </tar>
+	<delete dir="${dist-src}"/>
+   </target>
+
+  <target name="clean" description="Remove the creatable Stuff">
+    <delete dir="${build}"/>
+    <delete dir="${bin}"/>
+    <delete dir="${dist-bin}"/>
+    <delete dir="${dist-src}"/>
+  </target>
+
+<target name="javadoc" depends="make">
+ 	<mkdir dir="${javadoc}"/>
+    <javadoc
+	packagenames="*, "
+	sourcepath="${src}"
+	destdir="${javadoc}"
+	windowtitle="${prgname}RSS Parser API Documentation"
+	header="${prgname}"
+	use="true"
+	version="true"
+	author="true"
+	private="true"
+   >
+	<classpath>
+      <fileset dir="${lib}">
+        <include name="**/*.jar"/>
+      </fileset>
+      </classpath>
+
+    </javadoc>
+</target>
+
+</project>
+

@@ -1,0 +1,27 @@
+#!/bin/sh
+#$Id:
+
+DIRS="src test build bin local"
+
+scriptdir=${0%/*}
+
+for mj in  $scriptdir/*.jar; do
+    classpath=$classpath\:$mj
+done
+for dir in $scriptdir/lib/*; do
+  if [[ $dir == *.jar || -d $dir ]]; then
+    classpath=$classpath\:$dir
+  fi  
+done
+
+
+classpath=${classpath#\:}
+
+for dir in $DIRS; do
+  if [[ -d $scriptdir/$dir ]]; then
+    classpath=$classpath\:$scriptdir/$dir
+  fi
+done
+classpath=${classpath#\:}
+
+echo $classpath

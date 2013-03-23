@@ -1,0 +1,16 @@
+$Id: CHANGELOG.txt,v 1.4 2004/09/04 12:12:38 taganaka Exp $
+
+Changelog for file RssLib4J
+=============================================
+
+
+Versions with 'b' at the end are beta versions.
+
+------------------------------------
+V0.1b     Initial version
+
+V0.1.1b   Bugfix: Parser broken on Rss feed V 0.9x
+
+V0.2b	  Almost all Rss v2 elements are been implemented
+
+V0.2	  All Rss v2 elements are been implemented. New method has been added and minor bug has been fixed

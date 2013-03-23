@@ -1,0 +1,14 @@
+#!/bin/sh
+#$Id: runtest,v 1.2 2004/03/22 15:03:59 taganaka Exp $
+SRCDIR=src
+TESTDIR=test
+JAVA=java
+JAVAFLAGS=
+MAINCLASS=org.gnu.stealthp.rsslib.Test
+
+scriptdir=${0%/*}
+
+CLASSPATH=\:`$scriptdir/classpath`
+
+echo $JAVA -cp $CLASSPATH $JAVAFLAGS  $MAINCLASS "$@"
+exec $JAVA -cp $CLASSPATH $JAVAFLAGS  $MAINCLASS "$@"
